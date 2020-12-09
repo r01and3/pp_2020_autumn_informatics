@@ -4,7 +4,6 @@
 #include <vector>
 #include <random>
 #include <ctime>
-#include <iostream>
 #include "./reduce.h"
 
 #define EPSILON 0.0001
@@ -73,13 +72,13 @@ TEST(Parallel_Operations_MPI, IntMax) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int* sendbuf = new int(rank + 1);
+    int sendbuf = rank + 1;
     int recvbuf = 0;
     const int count = 1;
-    const int root = gen() % size;
+    int root = 0;
     const int max = size;
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_INT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_EQ(recvbuf, max);
     }
@@ -93,13 +92,13 @@ TEST(Parallel_Operations_MPI, IntMin) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int* sendbuf = new int(rank + 1);
+    int sendbuf = rank + 1;
     int recvbuf = 0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const int min = 1;
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_INT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_EQ(recvbuf, min);
     }
@@ -113,13 +112,13 @@ TEST(Parallel_Operations_MPI, IntSum) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int* sendbuf = new int(rank + 1);
+    int sendbuf = rank + 1;
     int recvbuf = 0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const int sum = ((1 + size) * size) / 2;
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_EQ(recvbuf, sum);
     }
@@ -133,15 +132,15 @@ TEST(Parallel_Operations_MPI, IntProd) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int* sendbuf = new int(rank + 1);
+    int sendbuf = rank + 1;
     int recvbuf = 0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     int prod = 1;
     for (int i = 1; i <= size; i++)
         prod *= i;
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_INT, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_INT, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_EQ(recvbuf, prod);
     }
@@ -155,13 +154,13 @@ TEST(Parallel_Operations_MPI, FloatMax) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    float* sendbuf = new float(static_cast<float>(rank + 1));
+    float sendbuf = static_cast<float>(rank + 1);
     float recvbuf = 0.0f;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const float max = static_cast<float>(size);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_FLOAT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_FLOAT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, max, EPSILON);
     }
@@ -175,13 +174,13 @@ TEST(Parallel_Operations_MPI, FloatMin) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    float* sendbuf = new float(static_cast<float>(rank + 1));
+    float sendbuf = static_cast<float>(rank + 1);
     float recvbuf = 0.0f;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const float min = static_cast<float>(1);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_FLOAT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_FLOAT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, min, EPSILON);
     }
@@ -195,13 +194,13 @@ TEST(Parallel_Operations_MPI, FloatSum) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    float* sendbuf = new float(static_cast<float>(rank + 1));
+    float sendbuf = static_cast<float>(rank + 1);
     float recvbuf = 0.0f;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const float sum = static_cast<float>(((1 + size) * size) / 2);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_FLOAT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_FLOAT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, sum, EPSILON);
     }
@@ -215,15 +214,15 @@ TEST(Parallel_Operations_MPI, FloatProd) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    float* sendbuf = new float(static_cast<float>(rank + 1));
+    float sendbuf = static_cast<float>(rank + 1) * 0.01f;
     float recvbuf = 0.0f;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     float prod = 1.0f;
     for (int i = 1; i <= size; i++)
-        prod *= static_cast<float>(i);
+        prod *= static_cast<float>(i) * 0.01f;
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_FLOAT, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_FLOAT, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, prod, EPSILON);
     }
@@ -237,13 +236,13 @@ TEST(Parallel_Operations_MPI, DoubleMax) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    double* sendbuf = new double(static_cast<double>(rank + 1));
+    double sendbuf = static_cast<double>(rank + 1);
     double recvbuf = 0.0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const double max = static_cast<double>(size);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, max, EPSILON);
     }
@@ -257,13 +256,13 @@ TEST(Parallel_Operations_MPI, DoubleMin) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    double* sendbuf = new double(static_cast<double>(rank + 1));
+    double sendbuf = static_cast<double>(rank + 1);
     double recvbuf = 0.0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const double min = static_cast<double>(1);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, min, EPSILON);
     }
@@ -277,13 +276,13 @@ TEST(Parallel_Operations_MPI, DoubleSum) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    double* sendbuf = new double(static_cast<double>(rank + 1));
+    double sendbuf = static_cast<double>(rank + 1);
     double recvbuf = 0.0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     const double sum = static_cast<double>(((1 + size) * size) / 2);
 
-    ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
+    ASSERT_EQ(Reduce(&sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
         ASSERT_NEAR(recvbuf, sum, EPSILON);
     }
@@ -297,13 +296,13 @@ TEST(Parallel_Operations_MPI, DoubleProd) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    double* sendbuf = new double(static_cast<double>(rank + 1));
+    double* sendbuf = new double(static_cast<double>(rank + 1) * 0.01);
     double recvbuf = 0.0;
     const int count = 1;
-    const int root = gen() % size;
+    const int root = 0;
     double prod = 1.0;
     for (int i = 1; i <= size; i++)
-        prod *= static_cast<double>(i);
+        prod *= static_cast<double>(i) * 0.01;
 
     ASSERT_EQ(Reduce(sendbuf, &recvbuf, count, MPI_DOUBLE, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
     if (rank == root) {
@@ -323,10 +322,10 @@ TEST(Parallel_Operations_MPI, IntArrMax) {
     int* sendbuf = new int[count];
     int* recvbuf = new int[count];
     int* example = new int[count];
-    const int root = gen() % size;
+    const int root = 0;
 
     for (int i = 0; i < count; i++)
-        sendbuf[i] = gen() % 100;
+        sendbuf[i] = gen() % 10;
 
     ASSERT_EQ(MPI_Reduce(sendbuf, example, count, MPI_INT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
     ASSERT_EQ(Reduce(sendbuf, recvbuf, count, MPI_INT, MPI_MAX, root, MPI_COMM_WORLD), MPI_SUCCESS);
@@ -348,10 +347,10 @@ TEST(Parallel_Operations_MPI, IntArrMin) {
     int* sendbuf = new int[count];
     int* recvbuf = new int[count];
     int* example = new int[count];
-    const int root = gen() % size;
+    const int root = 0;
 
     for (int i = 0; i < count; i++)
-        sendbuf[i] = gen() % 100;
+        sendbuf[i] = gen() % 10;
 
     ASSERT_EQ(MPI_Reduce(sendbuf, example, count, MPI_INT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
     ASSERT_EQ(Reduce(sendbuf, recvbuf, count, MPI_INT, MPI_MIN, root, MPI_COMM_WORLD), MPI_SUCCESS);
@@ -373,10 +372,10 @@ TEST(Parallel_Operations_MPI, FloatArrSum) {
     float* sendbuf = new float[count];
     float* recvbuf = new float[count];
     float* example = new float[count];
-    const int root = gen() % size;
+    const int root = 0;
 
     for (int i = 0; i < count; i++)
-        sendbuf[i] = (gen() % 10) / 1.0f;
+        sendbuf[i] = (gen() % 10) * 0.1f;
 
     ASSERT_EQ(MPI_Reduce(sendbuf, example, count, MPI_FLOAT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
     ASSERT_EQ(Reduce(sendbuf, recvbuf, count, MPI_FLOAT, MPI_SUM, root, MPI_COMM_WORLD), MPI_SUCCESS);
@@ -398,10 +397,10 @@ TEST(Parallel_Operations_MPI, DoubleArrProd) {
     double* sendbuf = new double[count];
     double* recvbuf = new double[count];
     double* example = new double[count];
-    const int root = gen() % size;
+    const int root = 0;
 
     for (int i = 0; i < count; i++)
-        sendbuf[i] = (gen() % 10) / 1.0;
+        sendbuf[i] = (gen() % 10) * 0.1;
 
     ASSERT_EQ(MPI_Reduce(sendbuf, example, count, MPI_DOUBLE, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
     ASSERT_EQ(Reduce(sendbuf, recvbuf, count, MPI_DOUBLE, MPI_PROD, root, MPI_COMM_WORLD), MPI_SUCCESS);
